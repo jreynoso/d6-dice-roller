@@ -41,6 +41,17 @@ export const DEFAULT_VECTOR = {
 };
 
 export abstract class DiceShape {
+    static styleData = {
+        wildDieColor: "#ff0000",
+        explodedDieColor: "#f59e0b",
+        discardedDieOpacity: 0.35
+    };
+    static setStyleData(data: Partial<typeof DiceShape.styleData>) {
+        DiceShape.styleData = {
+            ...DiceShape.styleData,
+            ...data
+        };
+    }
     scale = 50;
     abstract sides: number;
     abstract inertia: number;
@@ -226,8 +237,9 @@ export abstract class DiceShape {
     }
     markWild() {
         for (const material of this.#ensureOwnMaterials()) {
-            material.color.set("#c084fc");
-            material.emissive.set("#3b0764");
+            material.color.set(DiceShape.styleData.wildDieColor);
+            material.emissive.set(DiceShape.styleData.wildDieColor);
+            material.emissiveIntensity = 0.35;
             material.needsUpdate = true;
         }
         return this;
@@ -235,8 +247,9 @@ export abstract class DiceShape {
     markExploded() {
         this.exploded = true;
         for (const material of this.#ensureOwnMaterials()) {
-            material.color.set("#f59e0b");
-            material.emissive.set("#78350f");
+            material.color.set(DiceShape.styleData.explodedDieColor);
+            material.emissive.set(DiceShape.styleData.explodedDieColor);
+            material.emissiveIntensity = 0.35;
             material.needsUpdate = true;
         }
         return this;
@@ -244,7 +257,7 @@ export abstract class DiceShape {
     markDiscarded() {
         for (const material of this.#ensureOwnMaterials()) {
             material.transparent = true;
-            material.opacity = 0.35;
+            material.opacity = DiceShape.styleData.discardedDieOpacity;
             material.needsUpdate = true;
         }
         return this;

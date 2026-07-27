@@ -75,6 +75,9 @@ export type RendererData = {
     renderTime: number;
     textFont: string;
     narrativeSymbolSet: string;
+    wildDieColor: string;
+    explodedDieColor: string;
+    discardedDieOpacity: number;
 };
 
 class DiceRendererClass extends Component {
@@ -124,6 +127,11 @@ class DiceRendererClass extends Component {
 
     setData(data: RendererData) {
         this.data = data;
+        DiceShape.setStyleData({
+            wildDieColor: data.wildDieColor,
+            explodedDieColor: data.explodedDieColor,
+            discardedDieOpacity: data.discardedDieOpacity
+        });
         if (!this.factory) {
             this.factory = new DiceFactory(this.WIDTH, this.HEIGHT, {
                 diceColor: this.data.diceColor,
@@ -131,7 +139,10 @@ class DiceRendererClass extends Component {
                 colorfulDice: this.data.colorfulDice,
                 scaler: this.data.scaler,
                 textFont: this.data.textFont,
-                narrativeSymbolSet: this.data.narrativeSymbolSet
+                narrativeSymbolSet: this.data.narrativeSymbolSet,
+                wildDieColor: this.data.wildDieColor,
+                explodedDieColor: this.data.explodedDieColor,
+                discardedDieOpacity: this.data.discardedDieOpacity
             });
         } else {
             this.factory.width = this.WIDTH;

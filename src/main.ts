@@ -35,7 +35,10 @@ export default class DiceRollerPlugin extends Plugin {
             colorfulDice: this.data.colorfulDice,
             scaler: this.data.scaler,
             renderTime: this.data.renderTime,
-            textFont: this.data.textFont
+            textFont: this.data.textFont,
+            wildDieColor: this.data.wildDieColor,
+            explodedDieColor: this.data.explodedDieColor,
+            discardedDieOpacity: this.data.discardedDieOpacity
         };
     }
     async onload() {

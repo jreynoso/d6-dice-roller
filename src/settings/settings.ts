@@ -711,6 +711,62 @@ export default class SettingTab extends PluginSettingTab {
             }
         );
 
+        const wildDieColor = new Setting(containerEl)
+            .setName("Wild Die Color")
+            .setDesc("Rendered Wild Dice will use this highlight color.");
+        wildDieColor.controlEl.createEl(
+            "input",
+            {
+                type: "color",
+                value: this.plugin.data.wildDieColor
+            },
+            (el) => {
+                el.value = this.plugin.data.wildDieColor;
+                el.onchange = async ({ target }) => {
+                    const color = (target as HTMLInputElement).value;
+                    if (!color) return;
+                    this.plugin.data.wildDieColor = color;
+                    DiceRenderer.setData(this.plugin.getRendererData());
+                    await this.plugin.saveSettings();
+                };
+            }
+        );
+
+        const explodedDieColor = new Setting(containerEl)
+            .setName("Exploded Die Color")
+            .setDesc("Rendered exploded dice will use this highlight color.");
+        explodedDieColor.controlEl.createEl(
+            "input",
+            {
+                type: "color",
+                value: this.plugin.data.explodedDieColor
+            },
+            (el) => {
+                el.value = this.plugin.data.explodedDieColor;
+                el.onchange = async ({ target }) => {
+                    const color = (target as HTMLInputElement).value;
+                    if (!color) return;
+                    this.plugin.data.explodedDieColor = color;
+                    DiceRenderer.setData(this.plugin.getRendererData());
+                    await this.plugin.saveSettings();
+                };
+            }
+        );
+
+        new Setting(containerEl)
+            .setName("Discarded Die Opacity")
+            .setDesc("Lower values make dice discarded by a complication appear more greyed out.")
+            .addSlider((s) => {
+                s.setLimits(0.1, 1, 0.05)
+                    .setValue(this.plugin.data.discardedDieOpacity)
+                    .setDynamicTooltip()
+                    .onChange((v) => {
+                        this.plugin.data.discardedDieOpacity = v;
+                        DiceRenderer.setData(this.plugin.getRendererData());
+                        this.plugin.saveSettings();
+                    });
+            });
+
         new Setting(containerEl)
             .setName("Show Notice for Results")
             .setDesc(

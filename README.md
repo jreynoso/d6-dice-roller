@@ -256,7 +256,7 @@ Marks the last d6 as a Wild Die.
 - On a 6, the Wild Die explodes and keeps adding rolls until it stops rolling 6.
 - On a 1, the highest other die is dropped.
 - In tooltips, the Wild Die is marked with `w`.
-- In 3D rendered dice, the Wild Die is highlighted, exploded Wild Die rolls are shown in a different color, and dice discarded by a complication are greyed out.
+- In 3D rendered dice, the Wild Die is highlighted, exploded Wild Die rolls are shown in a different color, and dice discarded by a complication are greyed out. These render colors are configurable in settings; the default Wild Die color is red.
 - If the plugin setting **Use Wild Die for D6 by Default** is enabled, plain d6 rolls such as `dice: 2d6` behave as if a Wild Die were present, but the rendered note still shows the original formula/result normally.
 
 #### Examples

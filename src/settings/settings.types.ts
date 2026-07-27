@@ -33,6 +33,9 @@ export interface DiceRollerSettings {
     diceColor: string;
     textColor: string;
     textFont: string;
+    wildDieColor: string;
+    explodedDieColor: string;
+    discardedDieOpacity: number;
     showLeafOnStartup: boolean;
     narrativeSymbolSet: string;
     displayAsSymbols: boolean;
