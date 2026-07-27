@@ -2,6 +2,7 @@ import { Body, Mat3, Vec3, Quaternion } from "cannon-es";
 import {
     BufferGeometry,
     MeshPhongMaterial,
+    Texture,
     Vector3,
     type Mesh,
     type Material,
@@ -235,23 +236,60 @@ export abstract class DiceShape {
         this.geometry.material = cloned;
         return cloned;
     }
-    markWild() {
+    #replaceBackgroundColor(color: string) {
         for (const material of this.#ensureOwnMaterials()) {
-            material.color.set(DiceShape.styleData.wildDieColor);
-            material.emissive.set(DiceShape.styleData.wildDieColor);
-            material.emissiveIntensity = 0.35;
+            const source = material.map?.image;
+            if (!(source instanceof HTMLCanvasElement)) continue;
+
+            const canvas = document.createElement("canvas");
+            canvas.width = source.width;
+            canvas.height = source.height;
+            const context = canvas.getContext("2d");
+            if (!context) continue;
+
+            context.drawImage(source, 0, 0);
+            const image = context.getImageData(0, 0, canvas.width, canvas.height);
+            const data = image.data;
+            const background = {
+                r: data[0],
+                g: data[1],
+                b: data[2],
+                a: data[3]
+            };
+
+            const hex = color.replace("#", "");
+            const fill = {
+                r: Number.parseInt(hex.slice(0, 2), 16),
+                g: Number.parseInt(hex.slice(2, 4), 16),
+                b: Number.parseInt(hex.slice(4, 6), 16)
+            };
+
+            for (let index = 0; index < data.length; index += 4) {
+                if (
+                    data[index] === background.r &&
+                    data[index + 1] === background.g &&
+                    data[index + 2] === background.b &&
+                    data[index + 3] === background.a
+                ) {
+                    data[index] = fill.r;
+                    data[index + 1] = fill.g;
+                    data[index + 2] = fill.b;
+                }
+            }
+
+            context.putImageData(image, 0, 0);
+            material.map = new Texture(canvas);
+            material.map.needsUpdate = true;
             material.needsUpdate = true;
         }
+    }
+    markWild() {
+        this.#replaceBackgroundColor(DiceShape.styleData.wildDieColor);
         return this;
     }
     markExploded() {
         this.exploded = true;
-        for (const material of this.#ensureOwnMaterials()) {
-            material.color.set(DiceShape.styleData.explodedDieColor);
-            material.emissive.set(DiceShape.styleData.explodedDieColor);
-            material.emissiveIntensity = 0.35;
-            material.needsUpdate = true;
-        }
+        this.#replaceBackgroundColor(DiceShape.styleData.explodedDieColor);
         return this;
     }
     markDiscarded() {
