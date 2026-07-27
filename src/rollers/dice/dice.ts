@@ -230,11 +230,9 @@ export class DiceRoller implements RenderableDice<number> {
     get wildDieTooltip() {
         switch (this.wildDieState) {
             case "exploded":
-                return "*";
+                return "bonus";
             case "complication":
-                return "x";
-            case "normal":
-                return "w";
+                return "mishap";
             default:
                 return null;
         }
