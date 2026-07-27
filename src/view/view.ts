@@ -246,10 +246,15 @@ export default class DiceView extends ItemView {
         }
         this.formulaComponent.inputEl.value = str.join(" ");
     }
+    applyDefaultTrayWildDie(formula: string) {
+        if (!this.plugin.data.defaultWildDie) return formula;
+        return formula.replace(/(\d*[dD]6)(?!\d|%|F|\[|w)/g, "$1w");
+    }
     async roll(formula = this.formulaComponent.inputEl.value) {
         if (!formula) {
             return;
         }
+        formula = this.applyDefaultTrayWildDie(formula);
         this.rollButton.setDisabled(true);
         const opts = {
             ...API.getRollerOptions(this.plugin.data)
