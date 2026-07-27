@@ -10,6 +10,26 @@ Inline dice rolling for Obsidian.md.
 
 Simply place a code block with your formula in your note (such as `` `dice: XdX` ``) and in preview mode it will be replaced with the result of the dice rolls. The result can then be re-rolled by clicking on it.
 
+## Local Installation for Obsidian
+
+Build and install directly into a local vault:
+
+```bash
+npm run install-local -- /path/to/YourVault
+```
+
+Or set an environment variable:
+
+```bash
+OBSIDIAN_VAULT=/path/to/YourVault npm run install-local
+```
+
+This copies `main.js`, `manifest.json`, and `styles.css` into:
+
+```text
+/path/to/YourVault/.obsidian/plugins/d6-dice-roller/
+```
+
 # Formulas
 
 [Dice formulas](#dice-formulas) can be added in settings, allowing you to define aliases for commonly used rolls. This works for _all_ dice types define below.

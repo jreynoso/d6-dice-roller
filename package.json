@@ -8,7 +8,8 @@
         "dev": "node esbuild.config.mjs",
         "build": "node esbuild.config.mjs production && npm run rollup",
         "rollup": "tsc --emitDeclarationOnly --declaration --declarationMap --project tsconfig.json --outDir dist",
-        "test": "vitest"
+        "test": "vitest",
+        "install-local": "npm run build && node scripts/install-local.mjs"
     },
     "keywords": [],
     "author": "Jeremy Valentine (original author), fork maintained independently",
