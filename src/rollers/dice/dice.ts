@@ -218,14 +218,14 @@ export class DiceRoller implements RenderableDice<number> {
         if (!this.hasWildDie) return null;
 
         const wild = this.results.get(this.results.size - 1);
-        if (!wild) return "Wild Die: last die";
-        if (wild.modifiers?.has("!")) {
-            return "Wild Die: exploded";
+        if (!wild) return "";
+        if (wild.modifiers?.has("!") && !wild.modifiers?.has("d")) {
+            return "!";
         }
-        if (wild.value === this.faces.min) {
-            return "Wild Die: complication (highest other die dropped)";
+        if (wild.modifiers?.has("d")) {
+            return "complication";
         }
-        return "Wild Die: last die";
+        return "";
     }
 
     keepLow(drop: number = 1) {
@@ -663,6 +663,10 @@ export class DiceRoller implements RenderableDice<number> {
             }
             wild.display = `${wild.value}`;
         } else if (wild.value === this.faces.min) {
+            wild.usable = false;
+            wild.modifiers.add("d");
+            this.styleShapes(wildShapes, "discarded");
+
             const highestOther = [...this.results]
                 .filter(([index, result]) => index !== wildIndex && result.usable)
                 .sort((a, b) => b[1].value - a[1].value)[0];
