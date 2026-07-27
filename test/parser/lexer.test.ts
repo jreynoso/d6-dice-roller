@@ -206,6 +206,24 @@ test('Lexer should parse "1d6kl3', () => {
     ]);
 });
 
+test('Lexer should parse "2d6w"', () => {
+    let actual = Lexer.parse("2d6w").unwrap().map(toLexicalToken);
+    expect(actual).toEqual([
+        {
+            conditions: undefined,
+            parenedDice: undefined,
+            type: "dice",
+            value: "2d6"
+        },
+        {
+            conditions: undefined,
+            parenedDice: undefined,
+            type: "w",
+            value: "w"
+        }
+    ]);
+});
+
 test('Lexer should parse "1d6k', () => {
     let actual = Lexer.parse("1d6k").unwrap().map(toLexicalToken);
     expect(actual).toEqual([

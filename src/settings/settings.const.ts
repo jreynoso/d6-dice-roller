@@ -18,6 +18,7 @@ export const DEFAULT_SETTINGS: DiceRollerSettings = {
     formulas: {},
     defaultRoll: 1,
     defaultFace: 100,
+    defaultWildDie: false,
     renderer: false,
     renderAllDice: false,
     addToView: false,

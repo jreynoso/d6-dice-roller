@@ -233,6 +233,17 @@ export default class SettingTab extends PluginSettingTab {
                 };
             });
         new Setting(containerEl)
+            .setName("Use Wild Die for D6 by Default")
+            .setDesc(
+                "Standard d6 rolls automatically use a Wild Die as the last die rolled. You can also add the w modifier manually, such as 2d6w."
+            )
+            .addToggle((t) => {
+                t.setValue(this.plugin.data.defaultWildDie).onChange((v) => {
+                    this.plugin.data.defaultWildDie = v;
+                    this.plugin.saveSettings();
+                });
+            });
+        new Setting(containerEl)
             .setName("Round Results")
             .setDesc("Determine the rounding behavior for dice results.")
             .addDropdown((d) => {

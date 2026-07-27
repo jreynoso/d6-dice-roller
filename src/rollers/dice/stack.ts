@@ -98,6 +98,16 @@ export class BasicStackRoller extends Roller<number> {
                     });
                     break;
                 }
+                case "w": {
+                    let diceInstance = this.dice[index - 1];
+
+                    diceInstance.modifiers.set("w", {
+                        data: 1,
+                        conditionals: [],
+                        value: dice.text
+                    });
+                    break;
+                }
                 case "kh": {
                     let diceInstance = this.dice[index - 1];
                     let data = dice.value ? Number(dice.value) : 1;
@@ -484,6 +494,16 @@ export class StackRoller extends RenderableRoller<number> {
 
                     diceInstance.modifiers.set("u", {
                         data,
+                        conditionals: [],
+                        value: dice.text
+                    });
+                    break;
+                }
+                case "w": {
+                    let diceInstance = this.children[index - 1];
+
+                    diceInstance.modifiers.set("w", {
+                        data: 1,
                         conditionals: [],
                         value: dice.text
                     });

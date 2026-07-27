@@ -28,9 +28,13 @@ interface Modifier {
     value: string;
 }
 
-type ModifierType = "sort" | "kh" | "kl" | "!" | "!!" | "r" | "u";
+type ModifierType = "sort" | "kh" | "kl" | "!" | "!!" | "r" | "u" | "w";
 
 export class DiceRoller implements RenderableDice<number> {
+    static defaultWildDie = false;
+    static setDefaultWildDie(enabled: boolean) {
+        DiceRoller.defaultWildDie = enabled;
+    }
     getType() {
         return `D${this.faces.max}` as RenderTypes;
     }
@@ -100,6 +104,19 @@ export class DiceRoller implements RenderableDice<number> {
             );
         }
         this.conditions = this.lexeme.conditions ?? [];
+
+        if (
+            this.constructor === DiceRoller &&
+            DiceRoller.defaultWildDie &&
+            this.faces.max === 6 &&
+            this.faces.min === 1
+        ) {
+            this.modifiers.set("w", {
+                data: 1,
+                conditionals: [],
+                value: "w"
+            });
+        }
     }
     dice: string;
     modifiers: Map<ModifierType, Modifier> = new Map();
@@ -536,6 +553,10 @@ export class DiceRoller implements RenderableDice<number> {
     }
     async applyModifier(type: string, modifier: Modifier) {
         switch (type) {
+            case "w": {
+                await this.applyWildDie();
+                break;
+            }
             case "sort": {
                 let values: ResultInterface<number>[];
                 //true = asc
@@ -583,6 +604,37 @@ export class DiceRoller implements RenderableDice<number> {
         }
     }
 
+    applyWildDie() {
+        const wildIndex = this.results.size - 1;
+        const wild = this.results.get(wildIndex);
+
+        if (!wild) return;
+
+        wild.modifiers.add("w");
+
+        if (wild.value === this.faces.max) {
+            let newRoll = this.faces.max;
+            while (newRoll === this.faces.max) {
+                newRoll = this.getValueSync();
+                wild.value += newRoll;
+            }
+            wild.display = `${wild.value}`;
+        } else if (wild.value === this.faces.min) {
+            const highestOther = [...this.results]
+                .filter(([index, result]) => index !== wildIndex && result.usable)
+                .sort((a, b) => b[1].value - a[1].value)[0];
+
+            if (highestOther) {
+                const [dropIndex, dropResult] = highestOther;
+                dropResult.usable = false;
+                dropResult.modifiers.add("d");
+                this.results.set(dropIndex, { ...dropResult });
+            }
+        }
+
+        this.results.set(wildIndex, { ...wild });
+        this.updateResultArray();
+    }
     async makeUnique() {
         let resultValues = [...this.results.values()];
         if (

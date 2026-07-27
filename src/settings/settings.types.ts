@@ -23,6 +23,7 @@ export interface DiceRollerSettings {
     formulas: Record<string, string>;
     defaultRoll: number;
     defaultFace: number;
+    defaultWildDie: boolean;
     renderer: boolean;
     renderAllDice: boolean;
     addToView: boolean;

@@ -1,6 +1,7 @@
 import { Plugin, Notice, WorkspaceLeaf } from "obsidian";
 
 import { StackRoller } from "./rollers/dice/stack";
+import { DiceRoller } from "./rollers/dice/dice";
 
 import SettingTab from "./settings/settings";
 
@@ -49,7 +50,7 @@ export default class DiceRollerPlugin extends Plugin {
         this.register(() => delete window["DiceRoller"]);
         this.addChild(DataviewManager.initialize(this.app));
 
-        Lexer.setDefaults(this.data.defaultRoll, this.data.defaultFace);
+        this.syncDiceSettings();
 
         this.addSettingTab(new SettingTab(this.app, this));
 
@@ -165,7 +166,12 @@ export default class DiceRollerPlugin extends Plugin {
             await this.saveSettings();
         }
     }
+    syncDiceSettings() {
+        Lexer.setDefaults(this.data.defaultRoll, this.data.defaultFace);
+        DiceRoller.setDefaultWildDie(this.data.defaultWildDie);
+    }
     async saveSettings() {
+        this.syncDiceSettings();
         await this.saveData(this.data);
     }
 

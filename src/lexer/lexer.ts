@@ -164,6 +164,7 @@ class LexerClass {
             value: this.clampInfinite
         },
         u: /u/u,
+        w: /w/u,
         narrative: {
             match: /^(?:\d*(?:[GgYyBbRrPpSsWw]|[AaPpCcBbSsFf]|pro|boo|blk|k|sb|diff))(?: ?\d*(?:[GgYyBbRrPpSsWw]|[AaPpDdCcBbSsFf]|pro|boo|blk|k|sb|diff))+$/u,
             value: (match) => {
