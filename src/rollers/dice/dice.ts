@@ -193,6 +193,22 @@ export class DiceRoller implements RenderableDice<number> {
             .join("");
         return `${conditionals}${modifiers}`;
     }
+    get hasWildDie() {
+        return this.modifiers.has("w");
+    }
+    get wildDieTooltip() {
+        if (!this.hasWildDie) return null;
+
+        const wild = this.results.get(this.results.size - 1);
+        if (!wild) return "Wild Die: last die";
+        if (wild.modifiers?.has("!")) {
+            return "Wild Die: exploded";
+        }
+        if (wild.value === this.faces.min) {
+            return "Wild Die: complication (highest other die dropped)";
+        }
+        return "Wild Die: last die";
+    }
 
     keepLow(drop: number = 1) {
         if (!this.modifiersAllowed) {
@@ -613,6 +629,7 @@ export class DiceRoller implements RenderableDice<number> {
         wild.modifiers.add("w");
 
         if (wild.value === this.faces.max) {
+            wild.modifiers.add("!");
             let newRoll = this.faces.max;
             while (newRoll === this.faces.max) {
                 newRoll = this.getValueSync();

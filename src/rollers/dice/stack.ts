@@ -301,20 +301,26 @@ export class StackRoller extends RenderableRoller<number> {
         }
         if (this._tooltip) return this._tooltip;
         const display = this.getDisplayText();
+        const wildDieNotes = this.children
+            .map((dice) => dice.wildDieTooltip)
+            .filter(Boolean);
+        const wildDieText = wildDieNotes.length
+            ? `\n${wildDieNotes.join("\n")}`
+            : "";
         if (this.expectedValue === ExpectedValue.Roll || this.shouldRender) {
             if (this.displayFixedText) {
-                return `${this.original}\n${this.result} = ${display}`;
+                return `${this.original}\n${this.result} = ${display}${wildDieText}`;
             }
-            return `${this.original}\n${display}`;
+            return `${this.original}\n${display}${wildDieText}`;
         }
         if (this.expectedValue === ExpectedValue.Average) {
             if (this.displayFixedText) {
-                return `${this.original}\n${this.result} = average: ${display}`;
+                return `${this.original}\n${this.result} = average: ${display}${wildDieText}`;
             }
-            return `${this.original}\naverage: ${display}`;
+            return `${this.original}\naverage: ${display}${wildDieText}`;
         }
 
-        return `${this.original}\nempty`;
+        return `${this.original}\nempty${wildDieText}`;
     }
     allowAverage(): boolean {
         return this.dynamic.every((roller: DiceRoller) =>

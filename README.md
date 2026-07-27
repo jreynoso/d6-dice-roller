@@ -110,6 +110,7 @@ If a modifier has a parameter, it will default to 1 if not provided.
 | Re-roll           | `r{n}`, `ri`   | Re-roll a minimum dice `{n}` times. If `i` is provided, will re-roll "infinitely" (capped at 100). |
 | Sort              | `s(a)`, `sd`   | Sort results ascending or descending.                                                              |
 | Make Unique       | `u`            | Dice will be rerolled until all results are unique.                                                |
+| Wild Die          | `w`            | Marks the last die as a Wild Die. On a max roll it explodes; on a 1 it drops the highest other die. |
 
 ### Min/Max
 
@@ -223,6 +224,25 @@ Re-rolled dice will display as `Xr` in the tooltip.
 | `dice: 2d20r` | `[7r, 18] = 15` |
 | `dice: 2d4r3` | `[3, 3r] = 6`   |
 | `dice: 1d2ri` | `[2r] = 2`      |
+
+### Wild Die
+
+#### Syntax: Xd6w
+
+Marks the last d6 as a Wild Die.
+
+- On a 6, the Wild Die explodes and keeps adding rolls until it stops rolling 6.
+- On a 1, the highest other die is dropped.
+- In tooltips, the Wild Die is marked with `w`.
+- If the plugin setting **Use Wild Die for D6 by Default** is enabled, plain d6 rolls such as `dice: 2d6` behave as if a Wild Die were present, but the rendered note still shows the original formula/result normally.
+
+#### Examples
+
+| Formula      | Tooltip Example                     |
+| ------------ | ----------------------------------- |
+| `dice: 2d6w` | `[4d, 1w] = 1`                      |
+| `dice: 2d6w` | `[3, 10w!] = 13`                    |
+| `dice: 3d6w` | `[2, 5d, 1w] = 3`                   |
 
 ### Custom Percent Dice
 
