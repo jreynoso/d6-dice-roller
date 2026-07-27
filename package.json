@@ -1,7 +1,7 @@
 {
-    "name": "@javalent/dice-roller",
-    "version": "11.4.2",
-    "description": "Inline dice rolling for Obsidian.md",
+    "name": "d6-dice-roller",
+    "version": "0.1.0",
+    "description": "An Obsidian dice roller fork with Star Wars D6 wild die support.",
     "main": "./dist/api.js",
     "types": "./dist/api/api.d.ts",
     "scripts": {
@@ -11,7 +11,7 @@
         "test": "vitest"
     },
     "keywords": [],
-    "author": "Jeremy Valentine",
+    "author": "Jeremy Valentine (original author), fork maintained independently",
     "license": "MIT",
     "devDependencies": {
         "@codemirror/language": "https://github.com/lishid/cm-language",

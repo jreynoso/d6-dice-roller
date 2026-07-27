@@ -1,6 +1,8 @@
-# Dice Roller
+# D6 Dice Roller
 
-> Warning: We are beginning a Readme transition to [Javalent's Plugins Documentation](https://plugins.javalent.com/home) in all Javalent repositories. Please bookmark this link and check it first before referring to this readme.
+Fork of [Dice Roller](https://github.com/valentine195/obsidian-dice-roller) by Jeremy Valentine, maintained independently with D6-focused changes including Star Wars D6 wild die support.
+
+This project preserves upstream attribution and license terms under MIT.
 
 Inline dice rolling for Obsidian.md.
 
@@ -643,10 +645,10 @@ See [Graphical Dice](#graphical-dice-1) for settings.
 
 # Usage in Other plugins
 
-Plugins that have the ability to write JavaScript (such as DataView) can interface with the Dice Roller plugin in by accessing it on the Obsidian app object:
+Plugins that have the ability to write JavaScript (such as DataView) can interface with the plugin by accessing it on the Obsidian app object:
 
 ```js
-const diceRollerPlugin = app.plugins.getPlugin("obsidian-dice-roller");
+const diceRollerPlugin = app.plugins.getPlugin("d6-dice-roller");
 ```
 
 Once you have an instance of the plugin, you can then generate the various types of rollers, such as a dice roller, tag roller, etc, using the `getRoller` method:

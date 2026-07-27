@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.0
+
+- Forked from `obsidian-dice-roller` / `Dice Roller` by Jeremy Valentine.
+- Renamed project to `d6-dice-roller` / `D6 Dice Roller`.
+- Reset versioning for the fork's independent release line.
+- Added Star Wars D6 wild die support, including a global default option and `w` modifier support.
+
+> Historical upstream changelog follows below for attribution and reference.
+
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
 ## [11.4.2](https://github.com/javalent/dice-roller/compare/11.4.1...11.4.2) (2025-03-24)
