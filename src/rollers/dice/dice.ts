@@ -542,9 +542,11 @@ export class DiceRoller implements RenderableDice<number> {
                                 reject();
                             }
                         );
-                        const value = await this.getValue(
-                            this.getShapes(index)
-                        );
+                        const shapes = this.getShapes(index);
+                        if (this.hasWildDie && index === this.rolls - 1) {
+                            this.styleShapes(shapes, "wild");
+                        }
+                        const value = await this.getValue(shapes);
                         results.set(index, value);
                         resolve();
                     })
