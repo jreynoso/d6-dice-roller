@@ -1,6 +1,7 @@
 import { Body, Mat3, Vec3, Quaternion } from "cannon-es";
 import {
     BufferGeometry,
+    MeshPhongMaterial,
     Vector3,
     type Mesh,
     type Material,
@@ -206,6 +207,46 @@ export abstract class DiceShape {
         this.body.wlambda = new Vec3();
 
         this.body.updateMassProperties();
+        return this;
+    }
+    #getMaterials() {
+        const materials = Array.isArray(this.geometry.material)
+            ? this.geometry.material
+            : [this.geometry.material];
+
+        return materials.filter(
+            (material): material is MeshPhongMaterial =>
+                material instanceof MeshPhongMaterial
+        );
+    }
+    #ensureOwnMaterials() {
+        const cloned = this.#getMaterials().map((material) => material.clone());
+        this.geometry.material = cloned;
+        return cloned;
+    }
+    markWild() {
+        for (const material of this.#ensureOwnMaterials()) {
+            material.color.set("#c084fc");
+            material.emissive.set("#3b0764");
+            material.needsUpdate = true;
+        }
+        return this;
+    }
+    markExploded() {
+        this.exploded = true;
+        for (const material of this.#ensureOwnMaterials()) {
+            material.color.set("#f59e0b");
+            material.emissive.set("#78350f");
+            material.needsUpdate = true;
+        }
+        return this;
+    }
+    markDiscarded() {
+        for (const material of this.#ensureOwnMaterials()) {
+            material.transparent = true;
+            material.opacity = 0.35;
+            material.needsUpdate = true;
+        }
         return this;
     }
     updateMaterialsForValue(value: number) {}

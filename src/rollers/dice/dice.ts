@@ -140,6 +140,24 @@ export class DiceRoller implements RenderableDice<number> {
         }
         return shapes;
     }
+    styleShapes(
+        shapes: DiceShape[] = [],
+        style: "wild" | "exploded" | "discarded"
+    ) {
+        for (const shape of shapes) {
+            switch (style) {
+                case "wild":
+                    shape.markWild();
+                    break;
+                case "exploded":
+                    shape.markExploded();
+                    break;
+                case "discarded":
+                    shape.markDiscarded();
+                    break;
+            }
+        }
+    }
 
     resultArray: number[];
     modifiersAllowed: boolean = true;
@@ -620,19 +638,27 @@ export class DiceRoller implements RenderableDice<number> {
         }
     }
 
-    applyWildDie() {
+    async applyWildDie() {
         const wildIndex = this.results.size - 1;
         const wild = this.results.get(wildIndex);
 
         if (!wild) return;
 
+        const wildShapes = this.getShapes(wildIndex) ?? [];
+        this.styleShapes(wildShapes, "wild");
         wild.modifiers.add("w");
 
         if (wild.value === this.faces.max) {
             wild.modifiers.add("!");
             let newRoll = this.faces.max;
             while (newRoll === this.faces.max) {
-                newRoll = this.getValueSync();
+                if (this.shouldRender) {
+                    const explodedShapes = DiceRenderer.getDiceForRoller(this);
+                    this.styleShapes(explodedShapes, "exploded");
+                    newRoll = await this.getValue(explodedShapes);
+                } else {
+                    newRoll = this.getValueSync();
+                }
                 wild.value += newRoll;
             }
             wild.display = `${wild.value}`;
@@ -645,6 +671,7 @@ export class DiceRoller implements RenderableDice<number> {
                 const [dropIndex, dropResult] = highestOther;
                 dropResult.usable = false;
                 dropResult.modifiers.add("d");
+                this.styleShapes(this.getShapes(dropIndex) ?? [], "discarded");
                 this.results.set(dropIndex, { ...dropResult });
             }
         }
