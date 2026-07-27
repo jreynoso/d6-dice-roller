@@ -406,6 +406,18 @@ export class StackRoller extends RenderableRoller<number> {
         } else {
             this.containerEl.removeClass("is-min");
         }
+
+        const wildDieStates = this.children.map((dice) => dice.wildDieState);
+        if (wildDieStates.includes("exploded")) {
+            this.containerEl.addClass("wild-die-exploded");
+        } else {
+            this.containerEl.removeClass("wild-die-exploded");
+        }
+        if (wildDieStates.includes("complication")) {
+            this.containerEl.addClass("wild-die-complication");
+        } else {
+            this.containerEl.removeClass("wild-die-complication");
+        }
     }
     async onClick(evt: MouseEvent) {
         if (evt.getModifierState("Alt")) {

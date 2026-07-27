@@ -113,6 +113,14 @@
     align-items: center;
 }
 
+.dice-roller.wild-die-exploded .dice-roller-result {
+    color: #2563eb;
+}
+
+.dice-roller.wild-die-complication .dice-roller-result {
+    color: #ea580c;
+}
+
 .dice-roller-result .embedded-table-result p {
     margin: 0;
     /* display: inline-flex; */

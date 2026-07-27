@@ -214,18 +214,30 @@ export class DiceRoller implements RenderableDice<number> {
     get hasWildDie() {
         return this.modifiers.has("w");
     }
-    get wildDieTooltip() {
+    get wildDieState(): "normal" | "exploded" | "complication" | null {
         if (!this.hasWildDie) return null;
 
         const wild = this.results.get(this.results.size - 1);
-        if (!wild) return "";
-        if (wild.modifiers?.has("!") && !wild.modifiers?.has("d")) {
-            return "!";
-        }
+        if (!wild) return "normal";
         if (wild.modifiers?.has("d")) {
             return "complication";
         }
-        return "";
+        if (wild.modifiers?.has("!")) {
+            return "exploded";
+        }
+        return "normal";
+    }
+    get wildDieTooltip() {
+        switch (this.wildDieState) {
+            case "exploded":
+                return "*";
+            case "complication":
+                return "x";
+            case "normal":
+                return "w";
+            default:
+                return null;
+        }
     }
 
     keepLow(drop: number = 1) {
