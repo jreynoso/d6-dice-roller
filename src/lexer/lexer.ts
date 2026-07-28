@@ -164,7 +164,8 @@ class LexerClass {
             value: this.clampInfinite
         },
         u: /u/u,
-        w: /w/u,
+        nw: /[nN][wW]/u,
+        w: /[wW]/u,
         narrative: {
             match: /^(?:\d*(?:[GgYyBbRrPpSsWw]|[AaPpCcBbSsFf]|pro|boo|blk|k|sb|diff))(?: ?\d*(?:[GgYyBbRrPpSsWw]|[AaPpDdCcBbSsFf]|pro|boo|blk|k|sb|diff))+$/u,
             value: (match) => {
@@ -198,6 +199,18 @@ class LexerClass {
             }
         },
         dice: [
+            {
+                match: /(?:\d+)?[Dd](?=(?:[nN][wW]|[wW]|k|K|kl|KL|kh|KH|dh|DH|dl|DL|r|R|u|U|s|S|!|=|<|>|[+\-*\/^)]|$))/u,
+                value: (match) => {
+                    const {
+                        roll = this.defaultRoll,
+                        faces = this.defaultFace
+                    } = match.match(
+                        /(?<roll>\d+)?[Dd](?<faces>%|-?\d+|\[\d+(?:[ \t]*[,-][ \t]*\d+)+\])?/
+                    ).groups;
+                    return `${roll}d${faces}`;
+                }
+            },
             {
                 match: OMITTED_REGEX,
                 value: (match) => {

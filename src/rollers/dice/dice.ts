@@ -165,6 +165,11 @@ export class DiceRoller implements RenderableDice<number> {
     conditions: Conditional[] = [];
     multiplier: number;
     fudge: boolean = false;
+    wildDieDisabled: boolean = false;
+    disableWildDie() {
+        this.wildDieDisabled = true;
+        this.modifiers.delete("w");
+    }
     get text() {
         return `${this.result}`;
     }

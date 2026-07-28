@@ -133,6 +133,7 @@ If a modifier has a parameter, it will default to 1 if not provided.
 | Sort              | `s(a)`, `sd`   | Sort results ascending or descending.                                                              |
 | Make Unique       | `u`            | Dice will be rerolled until all results are unique.                                                |
 | Wild Die          | `w`            | Marks the last die as a Wild Die. On a max roll it explodes; on a 1 it drops the highest other die. |
+| No Wild Die       | `nw`           | Disables the default Wild Die behavior for that die expression.                                     |
 
 ### Min/Max
 
@@ -249,7 +250,7 @@ Re-rolled dice will display as `Xr` in the tooltip.
 
 ### Wild Die
 
-#### Syntax: Xd6w
+#### Syntax: Xd6w / Xd6nw
 
 Marks the last d6 as a Wild Die.
 
@@ -258,6 +259,7 @@ Marks the last d6 as a Wild Die.
 - In tooltips, the Wild Die is marked with `w`.
 - In 3D rendered dice, the Wild Die is highlighted, exploded Wild Die rolls are shown in a different color, and dice discarded by a complication are greyed out. These render colors are configurable in settings; the default Wild Die color is red.
 - If the plugin setting **Use Wild Die for D6 by Default** is enabled, plain d6 rolls such as `dice: 2d6` behave as if a Wild Die were present, but the rendered note still shows the original formula/result normally.
+- Use `nw` to disable the global default Wild Die for a specific die expression, such as `2d6nw`.
 
 #### Examples
 

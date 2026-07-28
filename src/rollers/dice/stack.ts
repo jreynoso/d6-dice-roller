@@ -108,6 +108,11 @@ export class BasicStackRoller extends Roller<number> {
                     });
                     break;
                 }
+                case "nw": {
+                    let diceInstance = this.dice[index - 1];
+                    diceInstance.disableWildDie();
+                    break;
+                }
                 case "kh": {
                     let diceInstance = this.dice[index - 1];
                     let data = dice.value ? Number(dice.value) : 1;
@@ -538,6 +543,11 @@ export class StackRoller extends RenderableRoller<number> {
                         conditionals: [],
                         value: dice.text
                     });
+                    break;
+                }
+                case "nw": {
+                    let diceInstance = this.children[index - 1];
+                    diceInstance.disableWildDie();
                     break;
                 }
                 case "kh": {
