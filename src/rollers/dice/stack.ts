@@ -265,6 +265,8 @@ export class StackRoller extends RenderableRoller<number> {
     round: Round;
     signed: boolean;
     showRenderNotice: boolean;
+    displayFormulaAfter: boolean;
+    formulaAfterEl: HTMLSpanElement | null = null;
     async getReplacer() {
         let inline = this.showFormula ? `${this.inlineText} ` : "";
         return `${inline}${this.result}`;
@@ -371,6 +373,8 @@ export class StackRoller extends RenderableRoller<number> {
             }
         }
         let sign = this.signed && rounded > 0 ? "+" : "";
+        const showRenderedTotal =
+            this.expectedValue !== ExpectedValue.None || this.shouldRender;
         let result;
         if (this.expectedValue === ExpectedValue.None && !this.shouldRender) {
             if (this.position != ButtonPosition.NONE) {
@@ -392,8 +396,16 @@ export class StackRoller extends RenderableRoller<number> {
 
         if (this.displayFixedText) {
             this.resultEl.setText(this.fixedText);
+            this.formulaAfterEl?.setText("");
+        } else if (this.displayFormulaAfter) {
+            this.resultEl.setText(this.original);
+            const renderedTotal = showRenderedTotal
+                ? `(${result.join("") + this.stunted})`
+                : "";
+            this.formulaAfterEl?.setText(renderedTotal);
         } else {
             this.resultEl.setText(result.join("") + this.stunted);
+            this.formulaAfterEl?.setText("");
         }
 
         if (this.result === this.max) {
@@ -452,11 +464,12 @@ export class StackRoller extends RenderableRoller<number> {
     ) {
         super(data, original, lexemes, position);
 
+        this.displayFormulaAfter = displayFormulaAfter;
         if (displayFormulaAfter) {
-            this.containerEl.createSpan({
-                cls: "dice-roller-formula",
-                text: `(${original})`
+            this.formulaAfterEl = createSpan({
+                cls: "dice-roller-formula"
             });
+            this.containerEl.append(this.formulaAfterEl);
         }
 
         this.fixedText = fixedText;

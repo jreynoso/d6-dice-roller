@@ -196,13 +196,14 @@ export default class SettingTab extends PluginSettingTab {
                     e.createEl("code", { text: "`dice: 1d6`" });
                     e.createSpan({ text: " will become " });
                     const parent = e.createSpan("dice-roller");
-                    parent.createSpan({ cls: "dice-roller-result", text: "3" });
+                    parent.createSpan({ cls: "dice-roller-result", text: "1d6" });
                     setIcon(
                         parent.createSpan("dice-roller-button"),
                         Icons.DICE
                     );
+                    parent.createSpan({ cls: "dice-roller-formula", text: "(3)" });
                     e.createSpan({
-                        text: " (1d6). This only affects Dice Rollers."
+                        text: ". This only affects Dice Rollers."
                     });
                 })
             )
