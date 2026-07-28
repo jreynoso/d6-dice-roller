@@ -222,7 +222,9 @@ export class DiceRoller implements RenderableDice<number> {
     get wildDieState(): "normal" | "exploded" | "complication" | null {
         if (!this.hasWildDie) return null;
 
-        const wild = this.results.get(this.results.size - 1);
+        const wild = [...this.results.values()].find((result) =>
+            result.modifiers?.has("w")
+        );
         if (!wild) return "normal";
         if (wild.modifiers?.has("d")) {
             return "complication";
@@ -668,6 +670,7 @@ export class DiceRoller implements RenderableDice<number> {
         if (wild.value === this.faces.max) {
             wild.modifiers.add("!");
             let newRoll = this.faces.max;
+            let inserted = 0;
             while (newRoll === this.faces.max) {
                 if (this.shouldRender) {
                     const explodedShapes = DiceRenderer.getDiceForRoller(this);
@@ -676,9 +679,18 @@ export class DiceRoller implements RenderableDice<number> {
                 } else {
                     newRoll = this.getValueSync();
                 }
-                wild.value += newRoll;
+
+                const explodedResult = this.#getResultInterface(newRoll);
+                if (newRoll === this.faces.max) {
+                    explodedResult.modifiers.add("!");
+                }
+                _insertIntoMap(
+                    this.results,
+                    wildIndex + inserted + 1,
+                    explodedResult
+                );
+                inserted++;
             }
-            wild.display = `${wild.value}`;
         } else if (wild.value === this.faces.min) {
             wild.usable = false;
             wild.modifiers.add("d");
