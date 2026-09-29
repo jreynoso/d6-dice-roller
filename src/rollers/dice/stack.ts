@@ -281,6 +281,11 @@ export class StackRoller extends RenderableRoller<number> {
     shouldRender: boolean = false;
     isRendering: boolean = false;
     showFormula: boolean = false;
+    getDisplayFormula() {
+        // `nw` controls wild-die behavior but is not part of the formula
+        // users need to see in reading mode.
+        return this.original.replace(/nw/giu, "");
+    }
     getDisplayText() {
         let text: string[] = [];
         let index = 0;
@@ -304,7 +309,7 @@ export class StackRoller extends RenderableRoller<number> {
     }
     getTooltip() {
         if (this.isRendering) {
-            return this.original;
+            return this.getDisplayFormula();
         }
         if (this._tooltip) return this._tooltip;
         const display = this.getDisplayText();
@@ -316,18 +321,18 @@ export class StackRoller extends RenderableRoller<number> {
             : "";
         if (this.expectedValue === ExpectedValue.Roll || this.shouldRender) {
             if (this.displayFixedText) {
-                return `${this.original}\n${this.result} = ${display}${wildDieText}`;
+                return `${this.getDisplayFormula()}\n${this.result} = ${display}${wildDieText}`;
             }
-            return `${this.original}\n${display}${wildDieText}`;
+            return `${this.getDisplayFormula()}\n${display}${wildDieText}`;
         }
         if (this.expectedValue === ExpectedValue.Average) {
             if (this.displayFixedText) {
-                return `${this.original}\n${this.result} = average: ${display}${wildDieText}`;
+                return `${this.getDisplayFormula()}\n${this.result} = average: ${display}${wildDieText}`;
             }
-            return `${this.original}\naverage: ${display}${wildDieText}`;
+            return `${this.getDisplayFormula()}\naverage: ${display}${wildDieText}`;
         }
 
-        return `${this.original}\nempty${wildDieText}`;
+        return `${this.getDisplayFormula()}\nempty${wildDieText}`;
     }
     allowAverage(): boolean {
         return this.dynamic.every((roller: DiceRoller) =>
@@ -403,7 +408,7 @@ export class StackRoller extends RenderableRoller<number> {
             this.resultEl.setText(this.fixedText);
             this.formulaAfterEl?.setText("");
         } else if (this.displayFormulaAfter) {
-            this.resultEl.setText(this.original);
+            this.resultEl.setText(this.getDisplayFormula());
             const renderedTotal = showRenderedTotal
                 ? `(${result.join("") + this.stunted})`
                 : "";
