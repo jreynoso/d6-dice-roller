@@ -430,6 +430,11 @@ export class StackRoller extends RenderableRoller<number> {
         }
 
         const wildDieStates = this.children.map((dice) => dice.wildDieState);
+        if (this.children.some((dice) => dice.hasWildDie)) {
+            this.containerEl.addClass("wild-die-active");
+        } else {
+            this.containerEl.removeClass("wild-die-active");
+        }
         if (wildDieStates.includes("exploded")) {
             this.containerEl.addClass("wild-die-exploded");
         } else {

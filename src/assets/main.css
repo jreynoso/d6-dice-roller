@@ -113,6 +113,10 @@
     align-items: center;
 }
 
+.dice-roller.wild-die-active > .dice-roller-button {
+    color: #d4af37;
+}
+
 .dice-roller.wild-die-exploded .dice-roller-formula {
     color: #2563eb;
 }

@@ -23,6 +23,8 @@ export const VIEW_TYPE = "DICE_ROLLER_VIEW";
 
 export interface ViewResult {
     original: string;
+    displayOriginal?: string;
+    wildDieActive?: boolean;
     resultText: string;
     result: string | number;
     timestamp: number;
@@ -65,9 +67,15 @@ export default class DiceView extends ItemView {
                         this.plugin.data.addToView ||
                         roller.getSource() == VIEW_TYPE
                     ) {
+                        const stack =
+                            roller instanceof StackRoller ? roller : null;
                         await this.addResult({
                             result: roller.getResultText(),
                             original: roller.original,
+                            displayOriginal: stack?.getDisplayFormula(),
+                            wildDieActive: stack?.children.some(
+                                (dice) => dice.hasWildDie
+                            ),
                             resultText: roller.getTooltip(),
                             timestamp: new Date().valueOf(),
                             id: nanoid(12)
@@ -307,31 +315,37 @@ export default class DiceView extends ItemView {
         }
         const resultEl = createDiv("view-result");
         const topPaneEl = resultEl.createDiv("result-actions");
+        const displayOriginal =
+            result.displayOriginal ?? result.original.replace(/nw/giu, "");
+        const displayResultText = result.resultText.replace(/nw/giu, "");
         const reroll = new ExtraButtonComponent(topPaneEl)
             .setIcon(Icons.DICE)
             .setTooltip("Roll Again")
             .onClick(() => this.roll(result.original));
         reroll.extraSettingsEl.addClass("dice-result-reroll");
+        if (result.wildDieActive) {
+            reroll.extraSettingsEl.addClass("wild-die-active");
+        }
         topPaneEl.createSpan({
-            text: result.original
+            text: displayOriginal
         });
 
         const copy = new ExtraButtonComponent(topPaneEl)
             .setIcon(Icons.COPY)
             .setTooltip("Copy Result")
             .onClick(async () => {
-                await navigator.clipboard.writeText(`${result.resultText}`);
+                await navigator.clipboard.writeText(`${displayResultText}`);
             });
         copy.extraSettingsEl.addClass("dice-content-copy");
         if (Platform.isMobile) {
             resultEl.createSpan({
                 cls: "dice-content-result",
-                text: `${result.resultText}`
+                text: `${displayResultText}`
             });
         }
         resultEl.createEl("strong", {
             attr: {
-                "aria-label": result.resultText
+                "aria-label": displayResultText
             },
             text: `${result.result}`
         });

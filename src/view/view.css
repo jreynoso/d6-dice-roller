@@ -139,6 +139,10 @@
     right: 0;
     padding: 0.25rem;
 }
+.dice-roller-view .dice-roller-results .view-result .dice-result-reroll.wild-die-active {
+    color: #d4af37;
+}
+
 .dice-roller-view .dice-roller-results .view-result .dice-result-reroll {
     position: absolute;
     top: 0;
