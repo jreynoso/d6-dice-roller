@@ -70,13 +70,13 @@
     width: 100%;
 }
 
-.dice-roller-view .dice-roller-grid .advantage-disadvantage {
+.dice-roller-view .dice-roller-grid .wild-normal {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 0.5rem;
 }
-.dice-roller-view .dice-roller-grid .advantage-disadvantage button {
+.dice-roller-view .dice-roller-grid .wild-normal button {
     margin: 0;
     min-width: 66px;
 }

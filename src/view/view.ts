@@ -40,8 +40,7 @@ export default class DiceView extends ItemView {
         return this.plugin.data.customFormulas;
     }
     custom = "";
-    #adv = false;
-    #dis = false;
+    #wild = true;
     #add = 0;
 
     formulaComponent: TextAreaComponent;
@@ -140,52 +139,40 @@ export default class DiceView extends ItemView {
                 });
         }
 
-        const advDis = this.gridEl.createDiv("advantage-disadvantage");
+        const wildNormal = this.gridEl.createDiv("wild-normal");
 
-        new ExtraButtonComponent(advDis).setIcon(Icons.MINUS).onClick(() => {
-            this.#add -= 1;
-            this.setFormula();
-        });
-        const adv = new ButtonComponent(advDis)
-            .setButtonText("ADV")
+        new ExtraButtonComponent(wildNormal)
+            .setIcon(Icons.MINUS)
             .onClick(() => {
-                this.#adv = !this.#adv;
-                this.#dis = false;
-
-                if (this.#adv) {
-                    adv.setCta();
-                    dis.removeCta();
-                } else {
-                    adv.removeCta();
-                }
+                this.#add -= 1;
                 this.setFormula();
             });
-        if (this.#adv) {
-            adv.setCta();
-        }
-        const dis = new ButtonComponent(advDis)
-            .setButtonText("DIS")
+        const wild = new ButtonComponent(wildNormal)
+            .setButtonText("WILD")
             .onClick(() => {
-                this.#dis = !this.#dis;
-                this.#adv = false;
-
-                if (this.#dis) {
-                    dis.setCta();
-                    adv.removeCta();
-                } else {
-                    dis.removeCta();
-                }
-
-                this.setFormula();
+                this.#wild = true;
+                wild.setCta();
+                norm.removeCta();
+            });
+        const norm = new ButtonComponent(wildNormal)
+            .setButtonText("NORM")
+            .onClick(() => {
+                this.#wild = false;
+                norm.setCta();
+                wild.removeCta();
             });
 
-        if (this.#dis) {
-            dis.setCta();
+        if (this.#wild) {
+            wild.setCta();
+        } else {
+            norm.setCta();
         }
-        new ExtraButtonComponent(advDis).setIcon(Icons.PLUS).onClick(() => {
-            this.#add += 1;
-            this.setFormula();
-        });
+        new ExtraButtonComponent(wildNormal)
+            .setIcon(Icons.PLUS)
+            .onClick(() => {
+                this.#add += 1;
+                this.setFormula();
+            });
 
         new DiceTray({
             target: this.gridEl,
@@ -224,18 +211,6 @@ export default class DiceView extends ItemView {
             } else if (index > 0) {
                 str.push(instance.sign);
             }
-            let mod = "";
-            if (index === 0) {
-                if (this.#adv) {
-                    mod = "kh";
-                } else if (this.#dis) {
-                    mod = "kl";
-                }
-                instance.formula = instance.formula.replace(
-                    /(d\d+)/,
-                    `$1${mod}`
-                );
-            }
             str.push(`${instance.formula}`);
         }
         if (this.#add !== 0) {
@@ -246,15 +221,17 @@ export default class DiceView extends ItemView {
         }
         this.formulaComponent.inputEl.value = str.join(" ");
     }
-    applyDefaultTrayWildDie(formula: string) {
-        if (!this.plugin.data.defaultWildDie) return formula;
-        return formula.replace(/(\d*[dD]6)(?!\d|%|F|\[|w)/g, "$1w");
+    applyTrayWildDie(formula: string) {
+        return formula.replace(
+            /(\d*[dD]6)(?:\s*(?:[nN][wW]|[wW]))?(?!\d|%|F|\[)/g,
+            `$1${this.#wild ? "w" : "nw"}`
+        );
     }
     async roll(formula = this.formulaComponent.inputEl.value) {
         if (!formula) {
             return;
         }
-        formula = this.applyDefaultTrayWildDie(formula);
+        formula = this.applyTrayWildDie(formula);
         this.rollButton.setDisabled(true);
         const opts = {
             ...API.getRollerOptions(this.plugin.data)
